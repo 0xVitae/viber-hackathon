@@ -1,0 +1,100 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Bebas Neue", sans-serif;
+  --font-body: "Oswald", sans-serif;
+  --font-mono: "Share Tech Mono", monospace;
+  --color-scarlet: #c41e3a;
+  --color-scarlet-dark: #8b0000;
+  --color-gold: #d4af37;
+  --color-neon: #39ff14;
+  --color-warning: #ffd700;
+  --color-void: #0a0a0a;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-void);
+  color: #e8e8e8;
+  overflow-x: hidden;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.scanlines::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+}
+
+.crt-flicker {
+  animation: flicker 0.15s infinite alternate;
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0.97;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes radar-sweep {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes glitch {
+  0%,
+  100% {
+    transform: translate(0);
+  }
+  20% {
+    transform: translate(-2px, 2px);
+  }
+  40% {
+    transform: translate(2px, -2px);
+  }
+  60% {
+    transform: translate(-2px, -2px);
+  }
+  80% {
+    transform: translate(2px, 2px);
+  }
+}
+
+.glitch-text {
+  animation: glitch 0.3s infinite;
+}
