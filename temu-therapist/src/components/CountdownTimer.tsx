@@ -2,7 +2,11 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Clock } from "lucide-react";
 
-export function CountdownTimer() {
+interface CountdownTimerProps {
+  compact?: boolean;
+}
+
+export function CountdownTimer({ compact = false }: CountdownTimerProps) {
   const [seconds, setSeconds] = useState(() => Math.floor(Math.random() * 120) + 60);
 
   useEffect(() => {
@@ -16,6 +20,21 @@ export function CountdownTimer() {
     .toString()
     .padStart(2, "0");
   const secs = (seconds % 60).toString().padStart(2, "0");
+
+  if (compact) {
+    return (
+      <motion.div
+        className="flex items-center gap-1.5 rounded-md border-2 border-red-600 bg-red-50 px-2 py-1"
+        animate={seconds < 30 ? { scale: [1, 1.04, 1] } : {}}
+        transition={{ repeat: Infinity, duration: 0.5 }}
+      >
+        <Clock className="h-3 w-3 text-red-600" />
+        <span className="font-display text-sm text-red-700 tabular-nums leading-none">
+          {mins}:{secs}
+        </span>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div

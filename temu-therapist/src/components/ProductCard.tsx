@@ -20,7 +20,7 @@ export function ProductCard({ product, index = 0, onAddToCart }: ProductCardProp
       whileHover={{ scale: 1.02, boxShadow: "6px 6px 0 #e63900" }}
     >
       <motion.div
-        className="relative flex h-36 items-center justify-center bg-gradient-to-br from-orange-100 to-yellow-100 text-7xl"
+        className="relative flex h-28 items-center justify-center bg-gradient-to-br from-orange-100 to-yellow-100 text-6xl sm:h-36 sm:text-7xl"
         animate={{ backgroundColor: ["#fff7ed", "#fef9c3", "#fff7ed"] }}
         transition={{ repeat: Infinity, duration: 3 }}
       >

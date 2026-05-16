@@ -27,13 +27,13 @@ export function SpinWheel({ onClose }: SpinWheelProps) {
 
   return (
     <motion.div
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 p-4"
+      className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-black/60 p-4"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
     >
       <motion.div
-        className="relative max-w-sm rounded-2xl border-4 border-black bg-white p-6 shadow-[8px_8px_0_#ff6b00]"
+        className="relative my-auto w-full max-w-sm rounded-2xl border-[3px] border-black bg-white p-5 shadow-[6px_6px_0_#ff6b00] sm:border-4 sm:p-6 sm:shadow-[8px_8px_0_#ff6b00]"
         initial={{ scale: 0.8 }}
         animate={{ scale: 1 }}
       >
@@ -46,9 +46,9 @@ export function SpinWheel({ onClose }: SpinWheelProps) {
           <X className="h-5 w-5" />
         </button>
 
-        <h2 className="text-center font-display text-xl uppercase">Spin for Mental Stability</h2>
+        <h2 className="text-center font-display text-lg uppercase sm:text-xl">Spin for Mental Stability</h2>
 
-        <div className="relative mx-auto mt-6 h-48 w-48">
+        <div className="relative mx-auto mt-5 h-44 w-44 sm:mt-6 sm:h-48 sm:w-48">
           <div className="absolute top-0 left-1/2 z-10 -translate-x-1/2 -translate-y-2 text-2xl">▼</div>
           <motion.div
             className="h-full w-full rounded-full border-4 border-black"
