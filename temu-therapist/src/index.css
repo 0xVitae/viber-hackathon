@@ -25,6 +25,23 @@ body {
   font-family: var(--font-body);
   overflow-x: hidden;
   background: #fff5eb;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Prevent iOS Safari zoom-on-focus for inputs (font-size must be >=16px) */
+input,
+textarea,
+select {
+  font-size: 16px;
+}
+
+.pb-safe {
+  padding-bottom: max(env(safe-area-inset-bottom), 0px);
+}
+
+.pt-safe {
+  padding-top: max(env(safe-area-inset-top), 0px);
 }
 
 @keyframes shake {
