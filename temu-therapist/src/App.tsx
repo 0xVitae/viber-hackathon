@@ -4,7 +4,7 @@ import { VideoAdPopup } from "./components/VideoAdPopup";
 function App() {
   return (
     <>
-      <VideoAdPopup src="/ads/temu-therapist-ad.mp4" />
+      <VideoAdPopup src="/media/temu-therapist-intro.mp4" />
       <TherapyChat onBack={() => window.location.reload()} />
     </>
   );

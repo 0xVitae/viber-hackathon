@@ -26,17 +26,23 @@ export interface TherapyResponse {
   productIds: string[];
 }
 
-export interface ChatMessage {
-  id: string;
-  role: "user" | "assistant";
-  text: string;
-  products?: Product[];
-  timestamp: number;
-}
-
 export type SeverityLevel =
   | "Mildly inconvenienced"
   | "Spiralling"
   | "Existential"
   | "Gym arc incoming"
   | "Listening to Frank Ocean";
+
+export interface Severity {
+  level: SeverityLevel;
+  percent: number;
+}
+
+export interface ChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  text: string;
+  products?: Product[];
+  severity?: Severity;
+  timestamp: number;
+}

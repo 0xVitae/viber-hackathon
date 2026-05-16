@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, ShoppingCart, RotateCcw, Gift } from "lucide-react";
-import type { ChatMessage, Product } from "../types";
+import type { ChatMessage, Product, Severity } from "../types";
 import { getTherapyResponse } from "../data/responses";
 import { getProduct, PRODUCTS } from "../data/products";
 import { POPUP_MESSAGES } from "../data/popups";
@@ -38,7 +38,7 @@ export function TherapyChat({ onBack }: TherapyChatProps) {
     {
       id: "welcome",
       role: "assistant",
-      text: "Welcome to Temu Therapist™. I'm not licensed, but I AM 74% off. Tell me what's hurting you emotionally so I can recommend products.",
+      text: "Hi babe 💕 So glad you reached out. This is a safe space — I'm here to listen, and to help you find exactly what you need to feel better. So… tell me, what's been weighing on you lately?",
       timestamp: Date.now(),
     },
   ]);
@@ -52,7 +52,10 @@ export function TherapyChat({ onBack }: TherapyChatProps) {
   const [chaosLevel, setChaosLevel] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
   const userMessageCount = messages.filter((m) => m.role === "user").length;
-  const severity = getSeverity(userMessageCount);
+  const latestAiSeverity = [...messages]
+    .reverse()
+    .find((m) => m.role === "assistant" && m.severity)?.severity;
+  const severity = latestAiSeverity ?? getSeverity(userMessageCount);
 
   const scrollToBottom = useCallback(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -112,8 +115,15 @@ export function TherapyChat({ onBack }: TherapyChatProps) {
     let advice = "";
     let reasoning: string | undefined;
     let products: Product[] = [];
+    let severity: Severity | undefined;
     let isLive = false;
     const minDelay = new Promise((r) => setTimeout(r, 1200));
+
+    // Pass the full chat history so Claude has conversational context.
+    const historyForApi = [...messages, userMsg].map((m) => ({
+      role: m.role,
+      text: m.text,
+    }));
 
     try {
       const ac = new AbortController();
@@ -121,22 +131,25 @@ export function TherapyChat({ onBack }: TherapyChatProps) {
       const apiRes = await fetch("/api/temu-search", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: trimmed }),
+        body: JSON.stringify({ messages: historyForApi }),
         signal: ac.signal,
       });
       clearTimeout(timeoutId);
 
       if (apiRes.ok) {
         const data = (await apiRes.json()) as {
+          kind?: "ask" | "pitch";
           advice?: string;
           reasoning?: string;
           products?: Product[];
+          severity?: Severity;
           fallback?: boolean;
         };
-        if (!data.fallback && data.advice && data.products && data.products.length > 0) {
+        if (!data.fallback && data.advice) {
           advice = data.advice;
           reasoning = data.reasoning;
-          products = data.products;
+          products = data.products ?? [];
+          severity = data.severity;
           isLive = true;
         }
       }
@@ -162,6 +175,7 @@ export function TherapyChat({ onBack }: TherapyChatProps) {
       role: "assistant",
       text: fullText,
       products,
+      severity,
       timestamp: Date.now(),
     };
 
@@ -225,18 +239,13 @@ export function TherapyChat({ onBack }: TherapyChatProps) {
                     animate={{ opacity: 1, y: 0 }}
                   >
                     <div
-                      className={`max-w-[88%] rounded-2xl px-3 py-2.5 sm:max-w-[85%] sm:px-4 sm:py-3 ${
+                      className={`max-w-[88%] px-3 py-2 sm:max-w-[85%] sm:px-3.5 sm:py-2.5 ${
                         msg.role === "user"
-                          ? "rounded-br-sm bg-orange-500 font-semibold text-white"
-                          : "rounded-bl-sm border-2 border-orange-200 bg-orange-50 text-gray-900"
+                          ? "bubble-user font-semibold"
+                          : "bubble-ai"
                       }`}
                     >
-                      {msg.role === "assistant" && (
-                        <span className="mb-1 block text-[10px] font-black uppercase text-orange-600">
-                          🧠 AI Therapist (not real)
-                        </span>
-                      )}
-                      <p className="whitespace-pre-wrap text-sm leading-snug">{msg.text}</p>
+                      <p className="whitespace-pre-wrap text-[15px] leading-snug">{msg.text}</p>
                       {msg.products && msg.products.length > 0 && (
                         <div className="mt-3 grid gap-2.5 sm:grid-cols-2 sm:gap-3">
                           {msg.products.map((product, i) => (
@@ -264,30 +273,17 @@ export function TherapyChat({ onBack }: TherapyChatProps) {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                 >
-                  <motion.div className="rounded-2xl rounded-bl-sm border-2 border-orange-200 bg-orange-50 px-4 py-3">
-                    <span className="text-[10px] font-black uppercase text-orange-600">Analyzing trauma...</span>
-                    <div className="mt-2 flex gap-1">
+                  <motion.div className="bubble-ai px-3.5 py-2.5">
+                    <div className="flex gap-1">
                       {[0, 1, 2].map((i) => (
                         <motion.span
                           key={i}
-                          className="h-2 w-2 rounded-full bg-orange-500"
-                          animate={{ y: [0, -6, 0] }}
-                          transition={{ repeat: Infinity, duration: 0.6, delay: i * 0.15 }}
+                          className="h-2 w-2 rounded-full bg-gray-500"
+                          animate={{ opacity: [0.4, 1, 0.4] }}
+                          transition={{ repeat: Infinity, duration: 1, delay: i * 0.2 }}
                         />
                       ))}
                     </div>
-                    <motion.div
-                      className="mt-2 h-1.5 overflow-hidden rounded-full bg-gray-200"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                    >
-                      <motion.div
-                        className="h-full bg-orange-500"
-                        initial={{ width: "0%" }}
-                        animate={{ width: "100%" }}
-                        transition={{ duration: 2 }}
-                      />
-                    </motion.div>
                   </motion.div>
                 </motion.div>
               )}

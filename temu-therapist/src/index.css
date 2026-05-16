@@ -110,3 +110,42 @@ select {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* iMessage / WhatsApp style chat bubbles with tail */
+.bubble-ai {
+  position: relative;
+  background-color: #ececf0;
+  color: #1c1c1e;
+  border-radius: 18px;
+  border-top-left-radius: 4px;
+}
+.bubble-ai::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -7px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 7px 11px 0;
+  border-color: transparent #ececf0 transparent transparent;
+}
+
+.bubble-user {
+  position: relative;
+  background-color: #ff6b00;
+  color: #ffffff;
+  border-radius: 18px;
+  border-top-right-radius: 4px;
+}
+.bubble-user::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: -7px;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 0 0 11px 7px;
+  border-color: transparent transparent transparent #ff6b00;
+}

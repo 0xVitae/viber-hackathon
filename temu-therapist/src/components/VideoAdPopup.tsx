@@ -40,7 +40,7 @@ export function VideoAdPopup({ src, skipAfterSeconds = 5 }: VideoAdPopupProps) {
           exit={{ opacity: 0 }}
         >
           <motion.div
-            className="relative w-full max-w-[420px]"
+            className="relative w-full max-w-[300px] sm:max-w-[340px]"
             initial={{ scale: 0.6, rotate: -6, opacity: 0 }}
             animate={{ scale: 1, rotate: 0, opacity: 1 }}
             exit={{ scale: 0.7, opacity: 0 }}
@@ -69,7 +69,7 @@ export function VideoAdPopup({ src, skipAfterSeconds = 5 }: VideoAdPopupProps) {
                   muted
                   playsInline
                   controls={false}
-                  className="block aspect-[9/16] w-full"
+                  className="block aspect-[9/16] max-h-[60vh] w-full object-cover"
                   onEnded={close}
                 />
 

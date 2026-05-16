@@ -19,37 +19,52 @@ export function ProductCard({ product, index = 0, onAddToCart }: ProductCardProp
       transition={{ delay: index * 0.15, type: "spring" }}
       whileHover={{ scale: 1.02, boxShadow: "6px 6px 0 #e63900" }}
     >
-      <motion.div
-        className="relative flex h-28 items-center justify-center overflow-hidden bg-gradient-to-br from-orange-100 to-yellow-100 text-6xl sm:h-36 sm:text-7xl"
-        animate={product.imageUrl ? undefined : { backgroundColor: ["#fff7ed", "#fef9c3", "#fff7ed"] }}
-        transition={{ repeat: Infinity, duration: 3 }}
+      <a
+        href={product.sourceUrl ?? "#"}
+        target={product.sourceUrl ? "_blank" : undefined}
+        rel={product.sourceUrl ? "noopener noreferrer" : undefined}
+        onClick={(e) => {
+          if (!product.sourceUrl) e.preventDefault();
+        }}
+        className="block"
       >
-        {product.imageUrl ? (
-          <img
-            src={product.imageUrl}
-            alt={product.name}
-            loading="lazy"
-            className="h-full w-full object-cover"
-            onError={(e) => {
-              (e.currentTarget as HTMLImageElement).style.display = "none";
-            }}
-          />
-        ) : (
-          <span>{product.emoji}</span>
-        )}
-        {product.imageUrl && (
-          <span className="absolute bottom-1 right-1 rounded bg-black/80 px-1.5 py-0.5 text-[10px]" aria-hidden>
-            {product.emoji}
+        <motion.div
+          className="relative flex aspect-square w-full items-center justify-center overflow-hidden bg-gradient-to-br from-orange-100 to-yellow-100 text-6xl sm:text-7xl"
+          animate={product.imageUrl ? undefined : { backgroundColor: ["#fff7ed", "#fef9c3", "#fff7ed"] }}
+          transition={{ repeat: Infinity, duration: 3 }}
+        >
+          {product.imageUrl ? (
+            <img
+              src={product.imageUrl}
+              alt={product.name}
+              loading="lazy"
+              className="h-full w-full object-contain"
+              onError={(e) => {
+                (e.currentTarget as HTMLImageElement).style.display = "none";
+              }}
+            />
+          ) : (
+            <span>{product.emoji}</span>
+          )}
+          {product.imageUrl && (
+            <span className="absolute bottom-1 right-1 rounded bg-black/80 px-1.5 py-0.5 text-[10px]" aria-hidden>
+              {product.emoji}
+            </span>
+          )}
+          <span className="absolute top-2 left-2 rounded bg-red-600 px-2 py-0.5 text-[10px] font-black text-white animate-shake">
+            -{Math.floor(Math.random() * 30 + 70)}%
           </span>
-        )}
-        <span className="absolute top-2 left-2 rounded bg-red-600 px-2 py-0.5 text-[10px] font-black text-white animate-shake">
-          -{Math.floor(Math.random() * 30 + 70)}%
-        </span>
-        <span className="absolute top-2 right-2 flex items-center gap-1 rounded bg-black/80 px-2 py-0.5 text-[10px] font-bold text-neon-green">
-          <Users className="h-3 w-3" />
-          {viewers} viewing
-        </span>
-      </motion.div>
+          <span className="absolute top-2 right-2 flex items-center gap-1 rounded bg-black/80 px-2 py-0.5 text-[10px] font-bold text-neon-green">
+            <Users className="h-3 w-3" />
+            {viewers} viewing
+          </span>
+          {product.sourceUrl && (
+            <span className="absolute bottom-1 left-1 rounded bg-orange-500 px-1.5 py-0.5 text-[9px] font-black uppercase text-white shadow-md">
+              ↗ Real Temu
+            </span>
+          )}
+        </motion.div>
+      </a>
 
       <motion.div className="p-3">
         <span className="inline-block rounded bg-gold px-2 py-0.5 text-[9px] font-black uppercase text-black">
@@ -81,16 +96,31 @@ export function ProductCard({ product, index = 0, onAddToCart }: ProductCardProp
           LIMITED HEALING STOCK
         </div>
 
-        <motion.button
-          type="button"
-          onClick={onAddToCart}
-          className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border-2 border-black bg-orange-500 py-2.5 text-sm font-black uppercase text-white shadow-[3px_3px_0_#000] hover:bg-orange-600 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_#000]"
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
-        >
-          <ShoppingCart className="h-4 w-4" />
-          Add to Cart
-        </motion.button>
+        {product.sourceUrl ? (
+          <motion.a
+            href={product.sourceUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={onAddToCart}
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border-2 border-black bg-orange-500 py-2.5 text-sm font-black uppercase text-white shadow-[3px_3px_0_#000] hover:bg-orange-600 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_#000]"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <ShoppingCart className="h-4 w-4" />
+            Buy on Temu
+          </motion.a>
+        ) : (
+          <motion.button
+            type="button"
+            onClick={onAddToCart}
+            className="mt-3 flex w-full items-center justify-center gap-2 rounded-lg border-2 border-black bg-orange-500 py-2.5 text-sm font-black uppercase text-white shadow-[3px_3px_0_#000] hover:bg-orange-600 active:translate-x-0.5 active:translate-y-0.5 active:shadow-[1px_1px_0_#000]"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            <ShoppingCart className="h-4 w-4" />
+            Add to Cart
+          </motion.button>
+        )}
       </motion.div>
     </motion.div>
   );
