@@ -65,7 +65,7 @@ export function AnalysisPage({ onComplete }: AnalysisPageProps) {
               transition={{ duration: 2, repeat: Infinity, delay: i * 0.2 }}
             />
           ))}
-        </motion.div>
+        </div>
 
         <div className="relative z-10 flex flex-col items-center">
           <Radar size={100} />

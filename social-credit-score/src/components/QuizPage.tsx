@@ -98,7 +98,7 @@ export function QuizPage({ onComplete }: QuizPageProps) {
                     {opt.label}
                   </motion.button>
                 ))}
-              </motion.div>
+              </div>
             )}
 
             {question.type === 'slider' && (
@@ -123,7 +123,7 @@ export function QuizPage({ onComplete }: QuizPageProps) {
                 >
                   Submit Response
                 </button>
-              </motion.div>
+              </div>
             )}
           </motion.div>
         </AnimatePresence>

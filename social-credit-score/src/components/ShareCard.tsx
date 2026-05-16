@@ -32,7 +32,7 @@ export function ShareCard({ result }: ShareCardProps) {
         <p className="font-mono text-xs text-gray-500">OFFICIAL SCORE</p>
         <p className="font-display text-6xl text-gold">{result.score}</p>
         <p className="text-sm text-gray-400">/ 1000</p>
-      </motion.div>
+      </div>
 
       <div className="mt-4 space-y-2 border-t border-white/10 pt-4">
         <div>

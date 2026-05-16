@@ -46,7 +46,7 @@ export function SurveillanceOverlay() {
           <span className="h-2 w-2 animate-pulse rounded-full bg-scarlet" />
           TRACKING ACTIVE
         </span>
-      </motion.div>
+      </div>
       <motion.div
         key={feedIndex}
         initial={{ opacity: 0, x: 20 }}
