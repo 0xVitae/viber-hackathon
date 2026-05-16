@@ -119,3 +119,24 @@ body {
 ::-webkit-scrollbar-thumb {
   background: var(--color-bureau-red);
 }
+
+.input-bureau {
+  width: 100%;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  background: rgba(0, 0, 0, 0.5);
+  padding: 0.75rem 1rem;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: #e8e8e8;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input-bureau:focus {
+  border-color: var(--color-bureau-red);
+  box-shadow: 0 0 12px rgba(196, 30, 30, 0.3);
+}
+
+.input-bureau::placeholder {
+  color: rgba(255, 255, 255, 0.25);
+}
