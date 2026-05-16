@@ -20,11 +20,28 @@ export function ProductCard({ product, index = 0, onAddToCart }: ProductCardProp
       whileHover={{ scale: 1.02, boxShadow: "6px 6px 0 #e63900" }}
     >
       <motion.div
-        className="relative flex h-28 items-center justify-center bg-gradient-to-br from-orange-100 to-yellow-100 text-6xl sm:h-36 sm:text-7xl"
-        animate={{ backgroundColor: ["#fff7ed", "#fef9c3", "#fff7ed"] }}
+        className="relative flex h-28 items-center justify-center overflow-hidden bg-gradient-to-br from-orange-100 to-yellow-100 text-6xl sm:h-36 sm:text-7xl"
+        animate={product.imageUrl ? undefined : { backgroundColor: ["#fff7ed", "#fef9c3", "#fff7ed"] }}
         transition={{ repeat: Infinity, duration: 3 }}
       >
-        <span>{product.emoji}</span>
+        {product.imageUrl ? (
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            loading="lazy"
+            className="h-full w-full object-cover"
+            onError={(e) => {
+              (e.currentTarget as HTMLImageElement).style.display = "none";
+            }}
+          />
+        ) : (
+          <span>{product.emoji}</span>
+        )}
+        {product.imageUrl && (
+          <span className="absolute bottom-1 right-1 rounded bg-black/80 px-1.5 py-0.5 text-[10px]" aria-hidden>
+            {product.emoji}
+          </span>
+        )}
         <span className="absolute top-2 left-2 rounded bg-red-600 px-2 py-0.5 text-[10px] font-black text-white animate-shake">
           -{Math.floor(Math.random() * 30 + 70)}%
         </span>

@@ -15,7 +15,9 @@ export interface Product {
   reviews: number;
   emoji: string;
   tag: string;
-  category: EmotionalCategory[];
+  category?: EmotionalCategory[];
+  imageUrl?: string;
+  sourceUrl?: string;
 }
 
 export interface TherapyResponse {

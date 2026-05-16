@@ -173,7 +173,7 @@ export function getProduct(id: string): Product | undefined {
 }
 
 export function getProductsByCategory(category: string): Product[] {
-  const filtered = PRODUCTS.filter((p) => p.category.includes(category as Product["category"][number]));
+  const filtered = PRODUCTS.filter((p) => p.category?.includes(category as NonNullable<Product["category"]>[number]));
   if (filtered.length === 0) return PRODUCTS;
   return filtered.sort(() => Math.random() - 0.5);
 }

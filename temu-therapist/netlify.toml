@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[functions]
+  node_bundler = "esbuild"
+
+# SPA fallback — everything else hits index.html so client-side routing works
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

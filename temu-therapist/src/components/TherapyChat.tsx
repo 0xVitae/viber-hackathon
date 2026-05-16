@@ -109,17 +109,53 @@ export function TherapyChat({ onBack }: TherapyChatProps) {
     setTyping(true);
     setChaosLevel((c) => c + 1);
 
-    const delay = 1200 + Math.random() * 1500;
-    await new Promise((r) => setTimeout(r, delay));
+    let advice = "";
+    let reasoning: string | undefined;
+    let products: Product[] = [];
+    let isLive = false;
+    const minDelay = new Promise((r) => setTimeout(r, 1200));
 
-    const response = getTherapyResponse(trimmed);
-    const products: Product[] = response.productIds
-      .map((id) => getProduct(id))
-      .filter((p): p is Product => p !== undefined);
+    try {
+      const ac = new AbortController();
+      const timeoutId = setTimeout(() => ac.abort(), 25000);
+      const apiRes = await fetch("/api/temu-search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: trimmed }),
+        signal: ac.signal,
+      });
+      clearTimeout(timeoutId);
 
-    const fullText = response.reasoning
-      ? `${response.advice}\n\n${response.reasoning}`
-      : response.advice;
+      if (apiRes.ok) {
+        const data = (await apiRes.json()) as {
+          advice?: string;
+          reasoning?: string;
+          products?: Product[];
+          fallback?: boolean;
+        };
+        if (!data.fallback && data.advice && data.products && data.products.length > 0) {
+          advice = data.advice;
+          reasoning = data.reasoning;
+          products = data.products;
+          isLive = true;
+        }
+      }
+    } catch {
+      // network error / timeout → fall through to canned
+    }
+
+    if (!isLive) {
+      const response = getTherapyResponse(trimmed);
+      advice = response.advice;
+      reasoning = response.reasoning;
+      products = response.productIds
+        .map((id) => getProduct(id))
+        .filter((p): p is Product => p !== undefined);
+    }
+
+    await minDelay;
+
+    const fullText = reasoning ? `${advice}\n\n${reasoning}` : advice;
 
     const assistantMsg: ChatMessage = {
       id: `ai-${Date.now()}`,
